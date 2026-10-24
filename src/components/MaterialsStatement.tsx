@@ -141,7 +141,7 @@ export const MaterialsStatement: React.FC = () => {
         >
           {/* Parallax Macro Background Image with Smooth Daylight Filter Transitions */}
           <motion.img
-            src="/src/assets/images/materials_tactile_macro_1791807470321.jpg"
+            src="/images/materials_tactile_macro_1791807470321.jpg"
             alt="Tactile macro architectural study of raw travertine, Belgian linen, wire-brushed oak, and lime plaster with natural raking light"
             style={{
               y: imageParallaxY,
@@ -149,6 +149,13 @@ export const MaterialsStatement: React.FC = () => {
               filter: currentPhase.filter,
             }}
             className="w-full h-full object-cover opacity-85 will-change-transform transition-[filter] duration-1000 ease-out"
+            onError={(e) => {
+              const target = e.currentTarget;
+              const fallback = 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=85';
+              if (target.src !== fallback) {
+                target.src = fallback;
+              }
+            }}
             referrerPolicy="no-referrer"
           />
 

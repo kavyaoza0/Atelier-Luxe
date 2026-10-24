@@ -10,8 +10,8 @@ export const projects: Project[] = [
     location: 'Ahmedabad, India',
     year: '2025',
     description: 'A restrained home shaped by natural light, warm timber and tactile stone.',
-    image: '/src/assets/images/project_quiet_residence_1791807431306.jpg',
-    detailImage: '/src/assets/images/detail_courtyard_light_1791808661946.jpg',
+    image: '/images/project_quiet_residence_1791807431306.jpg',
+    detailImage: '/images/detail_courtyard_light_1791808661946.jpg',
     aspectRatio: 'landscape',
     details: {
       area: '6,200 sq.ft',
@@ -37,8 +37,8 @@ export const projects: Project[] = [
     location: 'Ahmedabad, India',
     year: '2024',
     description: 'Sculptural forms, soft neutrals and an understated material palette.',
-    image: '/src/assets/images/project_limestone_house_1791807444900.jpg',
-    detailImage: '/src/assets/images/detail_travertine_joinery_1791808649499.jpg',
+    image: '/images/project_limestone_house_1791807444900.jpg',
+    detailImage: '/images/detail_travertine_joinery_1791808649499.jpg',
     aspectRatio: 'portrait',
     details: {
       area: '8,400 sq.ft',
@@ -64,8 +64,8 @@ export const projects: Project[] = [
     location: 'Mumbai, India',
     year: '2025',
     description: 'A study in proportion, functional elegance and considered detail.',
-    image: '/src/assets/images/project_form_function_1791807457421.jpg',
-    detailImage: '/src/assets/images/detail_bespoke_oak_library_1791808673965.jpg',
+    image: '/images/project_form_function_1791807457421.jpg',
+    detailImage: '/images/detail_bespoke_oak_library_1791808673965.jpg',
     aspectRatio: 'landscape',
     details: {
       area: '4,100 sq.ft',
@@ -91,8 +91,8 @@ export const projects: Project[] = [
     location: 'Ahmedabad, India',
     year: '2024',
     description: 'A curated interior where art, architecture and everyday living coexist.',
-    image: '/src/assets/images/project_living_gallery_1791807515327.jpg',
-    detailImage: '/src/assets/images/philosophy_architectural_detail_1791807531294.jpg',
+    image: '/images/project_living_gallery_1791807515327.jpg',
+    detailImage: '/images/philosophy_architectural_detail_1791807531294.jpg',
     aspectRatio: 'wide',
     details: {
       area: '7,500 sq.ft',

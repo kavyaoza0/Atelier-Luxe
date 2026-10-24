@@ -88,6 +88,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               src={currentImage}
               alt={project.title}
               className="w-full h-full object-cover transition-all duration-500"
+              onError={(e) => {
+                const target = e.currentTarget;
+                const fallback = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85';
+                if (target.src !== fallback) target.src = fallback;
+              }}
               referrerPolicy="no-referrer"
             />
 

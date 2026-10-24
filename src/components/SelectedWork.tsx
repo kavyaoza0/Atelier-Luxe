@@ -111,6 +111,11 @@ const ParallaxImageFrame: React.FC<ParallaxImageFrameProps> = ({
           alt={alt}
           style={{ y, scale: 1.14 }}
           className="w-full h-full object-cover will-change-transform transition-all duration-700 ease-out group-hover:scale-[1.17]"
+          onError={(e) => {
+            const target = e.currentTarget;
+            const fallback = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85';
+            if (target.src !== fallback) target.src = fallback;
+          }}
           referrerPolicy="no-referrer"
         />
 

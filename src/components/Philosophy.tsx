@@ -146,9 +146,16 @@ export const Philosophy: React.FC = () => {
                 className="w-full h-full relative"
               >
                 <img
-                  src="/src/assets/images/philosophy_architectural_detail_1791807531294.jpg"
+                  src="/images/philosophy_architectural_detail_1791807531294.jpg"
                   alt="Architectural study of fluted limestone column and raw plaster joint in morning sunlight"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const fallback = 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85';
+                    if (target.src !== fallback) {
+                      target.src = fallback;
+                    }
+                  }}
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute top-3 right-3 text-[8px] uppercase tracking-[0.24em] font-mono text-white/90 bg-[#292722]/75 px-2 py-0.5 backdrop-blur-xs">

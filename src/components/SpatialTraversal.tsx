@@ -77,8 +77,8 @@ const CHAMBERS: SpatialChamber[] = [
     acousticReverb: 'RT60 0.35s · Fabric Dampened',
     quote: 'A transition from the intense daylight of the subcontinent into a muted, tactile sanctuary.',
     materials: ['Honed Roman Travertine', 'Custom Fluted White Oak', 'Unbleached Belgian Linen'],
-    image: '/src/assets/images/project_quiet_residence_1791807431306.jpg',
-    detailImage: '/src/assets/images/detail_courtyard_light_1791808661946.jpg',
+    image: '/images/project_quiet_residence_1791807431306.jpg',
+    detailImage: '/images/detail_courtyard_light_1791808661946.jpg',
     hotspots: [
       {
         id: 'spot-01-travertine',
@@ -87,7 +87,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: '60mm honed Roman travertine with 12mm recessed shadow-gap hearth datum.',
         x: 64,
         y: 74,
-        detailImage: '/src/assets/images/detail_courtyard_light_1791808661946.jpg',
+        detailImage: '/images/detail_courtyard_light_1791808661946.jpg',
         artisanCredit: 'Master Stonemasonry: Trivedi Stone Atelier',
       },
       {
@@ -97,7 +97,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: 'Continuous vertical white oak acoustic fins absorbing street reverberation.',
         x: 28,
         y: 46,
-        detailImage: '/src/assets/images/detail_courtyard_light_1791808661946.jpg',
+        detailImage: '/images/detail_courtyard_light_1791808661946.jpg',
         artisanCredit: 'Custom Joinery: Studio Kōzo',
       },
     ],
@@ -118,8 +118,8 @@ const CHAMBERS: SpatialChamber[] = [
     acousticReverb: 'RT60 0.45s · Convex Plaster Diffusion',
     quote: 'A 2.4-tonne unpolished limestone hearth anchors the gravitational weight of the room.',
     materials: ['Jodhpur Limestone', 'Venetian Lime Plaster', 'Microcement Screed'],
-    image: '/src/assets/images/project_limestone_house_1791807444900.jpg',
-    detailImage: '/src/assets/images/detail_travertine_joinery_1791808649499.jpg',
+    image: '/images/project_limestone_house_1791807444900.jpg',
+    detailImage: '/images/detail_travertine_joinery_1791808649499.jpg',
     hotspots: [
       {
         id: 'spot-02-hearth',
@@ -128,7 +128,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: 'Quarried Jodhpur limestone block with hand-chiselled vertical texture.',
         x: 52,
         y: 62,
-        detailImage: '/src/assets/images/detail_travertine_joinery_1791808649499.jpg',
+        detailImage: '/images/detail_travertine_joinery_1791808649499.jpg',
         artisanCredit: 'Limestone Extraction: Makrana Quarries',
       },
       {
@@ -138,7 +138,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: 'Venetian lime plaster applied with zero visible joints or framing reveals.',
         x: 76,
         y: 36,
-        detailImage: '/src/assets/images/detail_travertine_joinery_1791808649499.jpg',
+        detailImage: '/images/detail_travertine_joinery_1791808649499.jpg',
         artisanCredit: 'Plaster Guild: Stucco Veneziano Guild',
       },
     ],
@@ -159,8 +159,8 @@ const CHAMBERS: SpatialChamber[] = [
     acousticReverb: 'RT60 0.38s · Solid Walnut Diffraction',
     quote: 'A vertical cathedral of monographs framing the endless horizon of the Arabian sea.',
     materials: ['Smoked American Walnut', 'Brushed Warm Bronze', 'Calacatta Paonazzo'],
-    image: '/src/assets/images/project_form_function_1791807457421.jpg',
-    detailImage: '/src/assets/images/detail_bespoke_oak_library_1791808673965.jpg',
+    image: '/images/project_form_function_1791807457421.jpg',
+    detailImage: '/images/detail_bespoke_oak_library_1791808673965.jpg',
     hotspots: [
       {
         id: 'spot-03-library',
@@ -169,7 +169,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: '6.4m vertical smoked walnut bookcase with integrated indirect linear warm LEDs.',
         x: 34,
         y: 48,
-        detailImage: '/src/assets/images/detail_bespoke_oak_library_1791808673965.jpg',
+        detailImage: '/images/detail_bespoke_oak_library_1791808673965.jpg',
         artisanCredit: 'Cabinetry: Ebano Millwork',
       },
       {
@@ -179,7 +179,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: 'Hand-patinated architectural bronze handles and slender pivot profiles.',
         x: 72,
         y: 72,
-        detailImage: '/src/assets/images/detail_bespoke_oak_library_1791808673965.jpg',
+        detailImage: '/images/detail_bespoke_oak_library_1791808673965.jpg',
         artisanCredit: 'Patination: Studio Bronzista Milan',
       },
     ],
@@ -200,8 +200,8 @@ const CHAMBERS: SpatialChamber[] = [
     acousticReverb: 'RT60 0.52s · Courtyard Reverberance',
     quote: 'The boundary between internal meditation and the sculpture garden dissolves completely.',
     materials: ['Board-Marked Concrete', 'In-Situ Terrazzo', 'Dark Teak Joinery'],
-    image: '/src/assets/images/project_living_gallery_1791807515327.jpg',
-    detailImage: '/src/assets/images/philosophy_architectural_detail_1791807531294.jpg',
+    image: '/images/project_living_gallery_1791807515327.jpg',
+    detailImage: '/images/philosophy_architectural_detail_1791807531294.jpg',
     hotspots: [
       {
         id: 'spot-04-concrete',
@@ -210,7 +210,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: 'Poured in-situ with grain-transferred Douglas fir timber formwork.',
         x: 28,
         y: 56,
-        detailImage: '/src/assets/images/philosophy_architectural_detail_1791807531294.jpg',
+        detailImage: '/images/philosophy_architectural_detail_1791807531294.jpg',
         artisanCredit: 'Concrete Craft: Studio Terrazzieri',
       },
       {
@@ -220,7 +220,7 @@ const CHAMBERS: SpatialChamber[] = [
         spec: 'Locally gathered Sabarmati river stones diamond-honed to matte satin finish.',
         x: 58,
         y: 84,
-        detailImage: '/src/assets/images/philosophy_architectural_detail_1791807531294.jpg',
+        detailImage: '/images/philosophy_architectural_detail_1791807531294.jpg',
         artisanCredit: 'Aggregate Extraction: Sabarmati Basin Quarry',
       },
     ],
@@ -552,6 +552,11 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 src={CHAMBERS[0].image}
                 alt={CHAMBERS[0].name}
                 className="w-full h-full object-cover brightness-[0.72] contrast-[1.05]"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const fallback = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85';
+                  if (target.src !== fallback) target.src = fallback;
+                }}
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#141311] via-transparent to-[#141311]/70" />
@@ -570,6 +575,11 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 src={CHAMBERS[1].image}
                 alt={CHAMBERS[1].name}
                 className="w-full h-full object-cover brightness-[0.72] contrast-[1.05]"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const fallback = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85';
+                  if (target.src !== fallback) target.src = fallback;
+                }}
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#141311] via-transparent to-[#141311]/70" />
@@ -588,6 +598,11 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 src={CHAMBERS[2].image}
                 alt={CHAMBERS[2].name}
                 className="w-full h-full object-cover brightness-[0.72] contrast-[1.05]"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const fallback = 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85';
+                  if (target.src !== fallback) target.src = fallback;
+                }}
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#141311] via-transparent to-[#141311]/70" />
@@ -606,6 +621,11 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 src={CHAMBERS[3].image}
                 alt={CHAMBERS[3].name}
                 className="w-full h-full object-cover brightness-[0.72] contrast-[1.05]"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const fallback = 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=85';
+                  if (target.src !== fallback) target.src = fallback;
+                }}
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#141311] via-transparent to-[#141311]/70" />
@@ -959,6 +979,11 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                   src={activeHotspot.detailImage}
                   alt={activeHotspot.title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const fallback = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85';
+                    if (target.src !== fallback) target.src = fallback;
+                  }}
                   referrerPolicy="no-referrer"
                 />
               </div>

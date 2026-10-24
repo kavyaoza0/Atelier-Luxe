@@ -210,13 +210,21 @@ export const Hero: React.FC<HeroProps> = ({ onExploreWork, onDiscoverApproach, o
                   className="w-full h-full will-change-transform"
                 >
                   <img
-                    src="/src/assets/images/hero_architectural_interior_1791807419701.jpg"
+                    src="/images/hero_architectural_interior_1791807419701.jpg"
                     alt="Contemporary minimalist living pavilion with travertine plinth and serene natural morning daylight"
                     className={`w-full h-full object-cover transition-all duration-700 ${
                       isFocusMode ? 'scale-105 filter brightness-105' : 'scale-100'
                     } ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                     onLoad={() => setImageLoaded(true)}
-                    onError={() => setImageError(true)}
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      const fallback = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85';
+                      if (target.src !== fallback) {
+                        target.src = fallback;
+                      } else {
+                        setImageError(true);
+                      }
+                    }}
                     referrerPolicy="no-referrer"
                   />
                 </motion.div>
