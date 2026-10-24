@@ -1,0 +1,8 @@
+{
+  "name": "Atelier Luxe",
+  "description": "A minimalist, editorial-style website template designed for high-end interior design studios to showcase refined, sophisticated architectural projects.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
