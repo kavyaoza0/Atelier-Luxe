@@ -124,16 +124,16 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-24 sm:py-32 md:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative">
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 md:px-12">
+    <section id="contact" className="py-16 sm:py-24 md:py-32 lg:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12">
         {/* Folio Header with Expanding Hairline */}
-        <div className="relative pb-6 mb-12 md:mb-16">
+        <div className="relative pb-5 sm:pb-6 mb-10 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-[#777765]"
+            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]"
           >
             <span>04 — Your Space, Reimagined</span>
             <span className="hidden sm:inline">Commission Intake & Architectural Dossier</span>
@@ -149,7 +149,7 @@ export const ContactSection: React.FC = () => {
         </div>
 
         {/* Section Heading & Studio Capacity Indicator */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 md:mb-20">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-12 sm:mb-16 md:mb-20">
           <div>
             <StaggeredHeading
               as="h2"
@@ -162,7 +162,7 @@ export const ContactSection: React.FC = () => {
               duration={0.9}
               className="text-4xl sm:text-6xl md:text-7xl font-serif font-light text-[#292722] tracking-[-0.015em]"
             />
-            <p className="mt-4 text-base sm:text-lg text-[#34332F]/80 font-light max-w-xl leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg text-[#34332F]/80 font-light max-w-xl leading-relaxed">
               Tell us a little about what you're imagining. We review every architectural inquiry personally.
             </p>
           </div>
@@ -186,9 +186,9 @@ export const ContactSection: React.FC = () => {
         </div>
 
         {/* Contact Layout: Interactive Form + Studio Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-start">
           {/* Interactive Form Column */}
-          <div className="lg:col-span-7 bg-[#F5F2EC] p-6 sm:p-10 border border-[#292722]/15 shadow-[0_8px_32px_rgba(41,39,34,0.03)]">
+          <div className="lg:col-span-7 bg-[#F5F2EC] p-4 sm:p-8 md:p-10 border border-[#292722]/15 shadow-[0_8px_32px_rgba(41,39,34,0.03)]">
             <AnimatePresence mode="wait">
               {submittedBrief ? (
                 <motion.div

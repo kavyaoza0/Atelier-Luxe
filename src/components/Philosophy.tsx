@@ -33,19 +33,19 @@ export const Philosophy: React.FC = () => {
   ];
 
   return (
-    <section className="py-28 sm:py-36 md:py-48 bg-[#E8E1D7] text-[#292722] border-t border-[#292722]/10 relative overflow-hidden">
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 md:px-12">
+    <section className="py-16 sm:py-24 md:py-36 lg:py-44 bg-[#E8E1D7] text-[#292722] border-t border-[#292722]/10 relative overflow-hidden">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12">
         {/* Folio Header with Animated Hairline Datum */}
-        <div className="relative pb-6 mb-12">
+        <div className="relative pb-5 sm:pb-6 mb-8 sm:mb-12">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-[#777765]"
+            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]"
           >
             <span>Studio Manifesto · 08</span>
-            <span>Ahmedabad Spatial Philosophy</span>
+            <span className="truncate max-w-[160px] sm:max-w-none">Ahmedabad Spatial Philosophy</span>
           </motion.div>
           <motion.div
             initial={{ scaleX: 0 }}
@@ -57,7 +57,7 @@ export const Philosophy: React.FC = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Left Column: Expressive Serif Statement */}
           <div className="lg:col-span-7">
             <motion.span

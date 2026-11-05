@@ -486,13 +486,13 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
     <section
       ref={containerRef}
       id="traverse"
-      className={`relative h-[480vh] bg-[#141311] text-[#F5F2EC] ${
+      className={`relative h-[320vh] sm:h-[400vh] lg:h-[480vh] bg-[#141311] text-[#F5F2EC] ${
         isFullscreen ? 'fixed inset-0 z-50 h-screen overflow-y-auto' : ''
       }`}
     >
-      {/* Sticky Spatial Viewport Container */}
+      {/* Sticky Spatial Viewport Container with Dynamic Viewport Units */}
       <div
-        className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden flex flex-col justify-between select-none"
+        className="sticky top-0 h-[100dvh] min-h-[560px] max-h-screen w-full overflow-hidden flex flex-col justify-between select-none"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -724,26 +724,7 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
         </header>
 
         {/* CENTER LATERAL HUD OVERLAYS */}
-        <div className="relative z-30 px-3.5 sm:px-8 md:px-12 flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between pointer-events-none pt-2 sm:pt-0">
-          {/* Mobile Chamber Pill Selector */}
-          <div className="pointer-events-auto flex sm:hidden items-center gap-1 bg-[#141311]/85 backdrop-blur-md p-1 border border-[#E8E1D7]/20 shadow-md">
-            {CHAMBERS.map((ch, idx) => {
-              const isActive = idx === activeChamberIndex;
-              return (
-                <button
-                  key={ch.id}
-                  type="button"
-                  onClick={() => scrollToChamber(idx)}
-                  className={`px-2 py-1 text-[9px] font-mono transition-colors cursor-pointer ${
-                    isActive ? 'bg-[#E8E1D7] text-[#141311] font-bold shadow-xs' : 'text-[#A69F91] hover:text-[#E8E1D7]'
-                  }`}
-                >
-                  {ch.number}
-                </button>
-              );
-            })}
-          </div>
-
+        <div className="relative z-30 px-4 sm:px-8 md:px-12 flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between pointer-events-none pt-2 sm:pt-0">
           {/* Desktop Left Spatial Chambers Waypoint Navigation */}
           <div className="pointer-events-auto hidden sm:flex flex-col gap-1.5 sm:gap-2 max-w-[280px]">
             <div className="text-[9px] uppercase tracking-[0.24em] text-[#A69F91] mb-1 font-mono">
@@ -879,17 +860,39 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
         </div>
 
         {/* BOTTOM ACTIVE CHAMBER MONOGRAPH HUD */}
-        <footer className="relative z-30 pb-4 sm:pb-8 px-3.5 sm:px-8 md:px-12 bg-gradient-to-t from-[#141311] via-[#141311]/90 to-transparent pt-3 sm:pt-8">
-          <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-6 items-end">
+        <footer className="relative z-30 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-8 px-4 sm:px-8 md:px-12 bg-gradient-to-t from-[#141311] via-[#141311]/95 to-transparent pt-3 sm:pt-8 pointer-events-auto max-h-[46dvh] sm:max-h-none overflow-y-auto no-scrollbar">
+          {/* Mobile Swipeable Chamber Chips */}
+          <div className="flex sm:hidden items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 mb-2 pointer-events-auto">
+            {CHAMBERS.map((ch, idx) => {
+              const isActive = idx === activeChamberIndex;
+              return (
+                <button
+                  key={ch.id}
+                  type="button"
+                  onClick={() => scrollToChamber(idx)}
+                  className={`shrink-0 flex items-center gap-1 px-2.5 py-1 text-[9px] uppercase tracking-[0.12em] font-mono transition-all border ${
+                    isActive
+                      ? 'bg-[#E8E1D7] text-[#141311] border-[#E8E1D7] font-bold shadow-xs'
+                      : 'bg-[#141311]/85 text-[#A69F91] border-[#E8E1D7]/20 hover:text-[#E8E1D7]'
+                  }`}
+                >
+                  <span>{ch.number}</span>
+                  <span className="font-sans normal-case tracking-normal">{ch.code.split('. ')[1] || ch.name}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-6 items-end">
             {/* Left: Active Chamber Identity & Typographic Title */}
             <div className="md:col-span-6 lg:col-span-7">
-              <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.24em] text-[#E8E1D7]/75 font-mono">
+              <div className="flex items-center gap-2 sm:gap-3 mb-1 text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.24em] text-[#E8E1D7]/75 font-mono">
                 <span>Chamber {activeChamber.number}</span>
                 <span className="opacity-40">/</span>
-                <span className="truncate max-w-[200px] sm:max-w-none">{activeChamber.subtitle}</span>
+                <span className="truncate max-w-[220px] sm:max-w-none">{activeChamber.subtitle}</span>
               </div>
 
-              <h2 className="text-xl sm:text-3xl md:text-5xl font-serif font-light tracking-[-0.01em] text-[#F5F2EC] mb-1.5 sm:mb-3">
+              <h2 className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-serif font-light tracking-[-0.01em] text-[#F5F2EC] mb-1 sm:mb-2">
                 {activeChamber.name}
               </h2>
 
@@ -898,11 +901,11 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
               </p>
 
               {/* Material Chips */}
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2.5 sm:mt-4">
+              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-2 sm:mt-3">
                 {activeChamber.materials.map((mat) => (
                   <span
                     key={mat}
-                    className="text-[8px] sm:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.18em] px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#292722]/80 border border-[#E8E1D7]/20 text-[#E8E1D7]"
+                    className="text-[8px] sm:text-[9px] uppercase tracking-[0.12em] sm:tracking-[0.16em] px-2 py-0.5 sm:py-1 bg-[#292722]/80 border border-[#E8E1D7]/20 text-[#E8E1D7]"
                   >
                     {mat}
                   </span>
@@ -911,9 +914,9 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
             </div>
 
             {/* Right: Scroll Guidance & Project Archival Action */}
-            <div className="md:col-span-6 lg:col-span-5 flex flex-col md:items-end justify-between gap-2.5 sm:gap-6">
+            <div className="md:col-span-6 lg:col-span-5 flex flex-col md:items-end justify-between gap-2 sm:gap-5">
               {/* Primary Interactive Scroll Cue */}
-              <div className="group flex items-center gap-2.5 sm:gap-3 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-[#141311]/85 backdrop-blur-md border border-[#E8E1D7]/20 shadow-md">
+              <div className="hidden sm:flex group items-center gap-2.5 sm:gap-3 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-[#141311]/85 backdrop-blur-md border border-[#E8E1D7]/20 shadow-md">
                 <div className="flex flex-col items-center">
                   <MoveDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E8E1D7] group-hover:translate-y-0.5 transition-transform duration-300" />
                 </div>
@@ -932,7 +935,7 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 <button
                   type="button"
                   onClick={() => onOpenProject(activeProject)}
-                  className="min-h-[44px] sm:min-h-0 flex items-center gap-2 text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] font-medium text-[#E8E1D7] pb-1 border-b border-[#E8E1D7] hover:text-[#FFFFFF] hover:border-[#FFFFFF] transition-colors cursor-pointer"
+                  className="min-h-[40px] sm:min-h-0 flex items-center gap-2 text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] font-medium text-[#E8E1D7] pb-1 border-b border-[#E8E1D7] hover:text-[#FFFFFF] hover:border-[#FFFFFF] transition-colors cursor-pointer"
                 >
                   <span className="truncate max-w-[260px] sm:max-w-none">Inspect Archive: {activeProject.title}</span>
                   <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />

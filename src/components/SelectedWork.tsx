@@ -152,12 +152,12 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onOpenProject }) => 
       : projects.filter((p) => p.category === activeFilter);
 
   return (
-    <section id="work" className="py-24 sm:py-32 md:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative">
-      <div className="max-w-[1440px] mx-auto px-5 sm:px-8 md:px-12">
+    <section id="work" className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#F5F2EC] border-t border-[#292722]/10 relative">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
         {/* Header Strip with Label, Filter Controls & View Switcher */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 md:mb-24 pb-8 border-b border-[#292722]/10">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-16 md:mb-20 pb-6 sm:pb-8 border-b border-[#292722]/10">
           <div>
-            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.26em] font-medium text-[#777765] mb-4">
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.22em] sm:tracking-[0.26em] font-medium text-[#777765] mb-3 sm:mb-4">
               <span>02 — Selected Work</span>
               <span aria-hidden="true">·</span>
               <span>Monograph Folio</span>
@@ -313,7 +313,7 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onOpenProject }) => 
 
         {/* View Mode: Editorial Spread View (Asymmetrical Magazine Layouts) */}
         {viewMode === 'spread' && (
-          <div className="space-y-28 sm:space-y-40 md:space-y-48">
+          <div className="space-y-16 sm:space-y-24 md:space-y-36 lg:space-y-44">
             {filteredProjects.map((project) => {
               const isShowingDetail = !!activeDetailPlate[project.id];
               const displayImage = isShowingDetail && project.detailImage ? project.detailImage : project.image;

@@ -28,23 +28,23 @@ export const Services: React.FC = () => {
   return (
     <section
       id="services"
-      className="py-24 sm:py-32 md:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden"
+      className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden"
     >
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 md:px-12">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
         {/* Section Header Folio with Framer Motion reveal */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center justify-between pb-6 mb-16 md:mb-20 border-b border-[#292722]/10 text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-[#777765]"
+          className="flex items-center justify-between pb-4 sm:pb-6 mb-10 sm:mb-14 md:mb-16 border-b border-[#292722]/10 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.26em] text-[#777765]"
         >
           <span>06 — Disciplines & Practice</span>
-          <span>Architectural Services · Precision Tolerances</span>
+          <span className="truncate max-w-[200px] sm:max-w-none">Architectural Services · Precision Tolerances</span>
         </motion.div>
 
         {/* Section Title with staggered lines entrance */}
-        <div className="mb-16 md:mb-24 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="mb-10 sm:mb-16 md:mb-20 flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8">
           <div className="max-w-3xl">
             <StaggeredHeading
               as="h2"
@@ -74,7 +74,7 @@ export const Services: React.FC = () => {
         <motion.div
           onViewportEnter={() => setInViewSection(true)}
           viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 pt-4 [perspective:1200px]"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 pt-2 sm:pt-4 [perspective:1200px]"
         >
           {servicesData.map((discipline, index) => {
             const isExpanded = expandedId === discipline.id;
@@ -100,7 +100,7 @@ export const Services: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-16 sm:mt-20 p-8 sm:p-10 bg-[#E8E1D7]/35 border border-[#292722]/15"
+          className="mt-12 sm:mt-16 md:mt-20 p-6 sm:p-8 md:p-10 bg-[#E8E1D7]/35 border border-[#292722]/15"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-3">

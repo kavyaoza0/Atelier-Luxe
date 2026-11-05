@@ -40,16 +40,16 @@ export const Approach: React.FC = () => {
   };
 
   return (
-    <section id="approach" className="py-24 sm:py-32 md:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden">
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 md:px-12">
+    <section id="approach" className="py-16 sm:py-24 md:py-32 lg:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12">
         {/* Section Header Folio with Hairline Datum */}
-        <div className="relative pb-6 mb-12 md:mb-16">
+        <div className="relative pb-6 mb-10 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-[#777765]"
+            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]"
           >
             <span>07 — How We Work</span>
             <span className="hidden sm:inline">Architectural Methodology & Milestone Timeline</span>
@@ -65,7 +65,7 @@ export const Approach: React.FC = () => {
         </div>
 
         {/* Section Title with Staggered Lines */}
-        <div className="mb-14 md:mb-20">
+        <div className="mb-10 sm:mb-14 md:mb-20">
           <StaggeredHeading
             as="h2"
             lines={[
@@ -80,15 +80,15 @@ export const Approach: React.FC = () => {
         </div>
 
         {/* Interactive Architectural Milestone Progress Connector Track */}
-        <div className="mb-14 sm:mb-20 bg-[#E8E1D7]/60 border border-[#292722]/15 p-6 sm:p-8 backdrop-blur-xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#292722]/10 text-xs">
-            <div className="flex items-center gap-3">
+        <div className="mb-12 sm:mb-16 md:mb-20 bg-[#E8E1D7]/60 border border-[#292722]/15 p-4 sm:p-6 md:p-8 backdrop-blur-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 sm:pb-4 border-b border-[#292722]/10 text-xs">
+            <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#1E1B18]" />
               <span className="uppercase tracking-[0.22em] text-[10px] sm:text-[11px] font-mono text-[#777765]">
                 Methodology Timeline
               </span>
             </div>
-            <div className="flex items-center gap-4 text-[10px] sm:text-[11px] font-mono text-[#777765]">
+            <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-[11px] font-mono text-[#777765]">
               <span>ACTIVE PHASE: <strong className="text-[#1E1B18]">{activeStep} / 03</strong></span>
               <span aria-hidden="true">·</span>
               <span className="text-[#1E1B18]">{currentMeta.duration}</span>
@@ -96,7 +96,7 @@ export const Approach: React.FC = () => {
           </div>
 
           {/* Progress Connector Track */}
-          <div className="relative py-4">
+          <div className="relative py-3 sm:py-4">
             {/* Background Line */}
             <div className="absolute top-1/2 left-4 right-4 h-[1px] -translate-y-1/2 bg-[#292722]/20" />
 
@@ -109,8 +109,8 @@ export const Approach: React.FC = () => {
             />
 
             {/* Milestone Nodes */}
-            <div className="relative flex justify-between items-center px-1 sm:px-2">
-              {approachSteps.map((step, idx) => {
+            <div className="relative flex justify-between items-center px-0.5 sm:px-2">
+              {approachSteps.map((step) => {
                 const isActive = activeStep === step.number;
                 const isPassed = parseInt(activeStep, 10) > parseInt(step.number, 10);
                 return (
@@ -137,7 +137,7 @@ export const Approach: React.FC = () => {
                           </span>
                         )}
                       </motion.div>
-                      <span className={`text-[9px] sm:text-[11px] uppercase tracking-[0.12em] sm:tracking-[0.18em] font-sans mt-2 transition-colors text-center ${
+                      <span className={`text-[9px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.18em] font-sans mt-2 transition-colors text-center ${
                         isActive ? 'text-[#1E1B18] font-medium' : 'text-[#777765] group-hover:text-[#292722]'
                       }`}>
                         {step.title}
@@ -151,7 +151,7 @@ export const Approach: React.FC = () => {
         </div>
 
         {/* 3 Editorial Columns with Gallery Monograph Dark Charcoal Styling */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 items-start">
           {approachSteps.map((step, index) => {
             const isActive = activeStep === step.number;
             const meta = PHASE_METAS[step.number];
@@ -168,7 +168,7 @@ export const Approach: React.FC = () => {
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 onClick={() => toggleStep(step.number)}
-                className={`group flex flex-col justify-between p-6 sm:p-8 transition-all duration-400 cursor-pointer border ${
+                className={`group flex flex-col justify-between p-5 sm:p-7 md:p-8 transition-all duration-400 cursor-pointer border ${
                   isActive
                     ? 'bg-[#F5F2EC] border-[#1E1B18] shadow-[0_16px_45px_rgba(30,27,24,0.08)] -translate-y-1'
                     : 'bg-[#F5F2EC]/60 border-[#292722]/15 hover:border-[#292722]/40 hover:bg-[#F5F2EC]'
@@ -176,7 +176,7 @@ export const Approach: React.FC = () => {
               >
                 <div>
                   {/* Monograph Plate Header */}
-                  <div className="flex items-baseline justify-between mb-6 pb-4 border-b border-[#292722]/10">
+                  <div className="flex items-baseline justify-between mb-5 sm:mb-6 pb-3 sm:pb-4 border-b border-[#292722]/10">
                     <span className={`font-serif text-3xl sm:text-4xl font-light transition-colors ${
                       isActive ? 'text-[#1E1B18]' : 'text-[#777765] group-hover:text-[#292722]'
                     }`}>
@@ -250,7 +250,7 @@ export const Approach: React.FC = () => {
                   </AnimatePresence>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-[#292722]/10 flex items-center justify-between text-[10px] uppercase tracking-[0.2em] font-mono text-[#777765]">
+                <div className="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-[#292722]/10 flex items-center justify-between text-[10px] uppercase tracking-[0.2em] font-mono text-[#777765]">
                   <span>{isActive ? 'Active Phase' : 'Select Phase'}</span>
                   <ArrowRight className={`w-3.5 h-3.5 transition-transform ${
                     isActive ? 'translate-x-1 text-[#1E1B18]' : 'group-hover:translate-x-0.5'
@@ -267,9 +267,9 @@ export const Approach: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-20 sm:mt-24 pt-8 border-t border-[#292722]/10"
+          className="mt-14 sm:mt-20 md:mt-24 pt-6 sm:pt-8 border-t border-[#292722]/10"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#E8E1D7]/50 p-6 sm:p-10 border border-[#292722]/15 shadow-[0_12px_36px_rgba(41,39,34,0.04)]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center bg-[#E8E1D7]/50 p-5 sm:p-8 md:p-10 border border-[#292722]/15 shadow-[0_12px_36px_rgba(41,39,34,0.04)]">
             <div className="lg:col-span-5 relative aspect-[16/10] overflow-hidden bg-[#292722] border border-[#292722]/15 group">
               <motion.div
                 animate={shouldReduceMotion ? undefined : { y: [0, -6, 0] }}
@@ -277,9 +277,16 @@ export const Approach: React.FC = () => {
                 className="w-full h-full relative"
               >
                 <img
-                  src="/src/assets/images/detail_courtyard_light_1791808661946.jpg"
+                  src="/images/detail_courtyard_light_1791808661946.jpg"
                   alt="Courtyard light study and pivot door threshold"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const fallback = 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85';
+                    if (target.src !== fallback) {
+                      target.src = fallback;
+                    }
+                  }}
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute top-3 right-3 text-[8px] uppercase tracking-[0.24em] font-mono text-white/90 bg-[#1E1B18]/80 px-2 py-0.5 backdrop-blur-xs">

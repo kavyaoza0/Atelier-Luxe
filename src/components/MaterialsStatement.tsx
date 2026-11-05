@@ -109,17 +109,17 @@ export const MaterialsStatement: React.FC = () => {
     <section
       id="materials"
       ref={sectionRef}
-      className="py-24 sm:py-32 md:py-40 bg-[#E8E1D7]/50 border-t border-[#292722]/10 relative overflow-hidden"
+      className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#E8E1D7]/50 border-t border-[#292722]/10 relative overflow-hidden"
     >
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 md:px-12">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
         {/* Section Header Folio with Animated Expanding Hairline */}
-        <div className="relative pb-6 mb-10 md:mb-12">
+        <div className="relative pb-4 sm:pb-6 mb-8 sm:mb-10 md:mb-12">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-[#777765]"
+            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.26em] text-[#777765]"
           >
             <span>05 — Material Study · Geology & Provenance</span>
             <span className="hidden sm:inline">Tactile Palette Archive & Solar Ingress Simulation</span>
@@ -137,7 +137,7 @@ export const MaterialsStatement: React.FC = () => {
         {/* Full-width Immersive Photography Frame with Editorial Overlay & Micro-Parallax */}
         <div
           ref={heroImageContainerRef}
-          className="relative min-h-[400px] sm:min-h-0 aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/10] w-full overflow-hidden bg-[#292722] border border-[#292722]/12 shadow-[0_28px_70px_rgba(41,39,34,0.09)] mb-12 md:mb-16 select-none"
+          className="relative min-h-[380px] sm:min-h-0 aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/10] w-full overflow-hidden bg-[#292722] border border-[#292722]/12 shadow-[0_28px_70px_rgba(41,39,34,0.09)] mb-10 sm:mb-14 md:mb-16 select-none"
         >
           {/* Parallax Macro Background Image with Smooth Daylight Filter Transitions */}
           <motion.img
@@ -282,7 +282,7 @@ export const MaterialsStatement: React.FC = () => {
           </div>
 
           {/* Right Column: Active Specimen Specification Sheet with AnimatePresence */}
-          <div className="lg:col-span-8 bg-[#F5F2EC] p-8 sm:p-10 border border-[#292722]/12 shadow-[0_8px_36px_rgba(41,39,34,0.04)] min-h-[440px] relative overflow-hidden">
+          <div className="lg:col-span-8 bg-[#F5F2EC] p-5 sm:p-8 md:p-10 border border-[#292722]/12 shadow-[0_8px_36px_rgba(41,39,34,0.04)] min-h-[420px] relative overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={selectedMaterial.id}

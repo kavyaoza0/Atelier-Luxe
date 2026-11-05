@@ -59,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreWork, onDiscoverApproach, o
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[94vh] lg:min-h-screen pt-28 pb-12 px-6 sm:px-8 md:px-12 flex flex-col justify-between max-w-[1440px] mx-auto overflow-hidden"
+      className="relative min-h-[92vh] lg:min-h-screen pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 px-4 sm:px-6 md:px-10 lg:px-12 flex flex-col justify-between max-w-[1440px] mx-auto overflow-hidden"
     >
       {/* Subtle Background Architectural Depth Layer */}
       <motion.div
@@ -83,12 +83,12 @@ export const Hero: React.FC<HeroProps> = ({ onExploreWork, onDiscoverApproach, o
           initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: luxuryEase }}
-          className="flex items-center justify-between border-b border-[#292722]/10 pb-3 pt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-[#777765]"
+          className="flex items-center justify-between border-b border-[#292722]/10 pb-3 pt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.22em] sm:tracking-[0.26em] text-[#777765]"
         >
           <div className="flex items-center gap-2">
             <span>Monograph No. 08</span>
             <span aria-hidden="true" className="opacity-40">/</span>
-            <span>Interior Architecture Archive</span>
+            <span className="truncate max-w-[170px] sm:max-w-none">Interior Architecture Archive</span>
           </div>
           <div className="hidden sm:flex items-center gap-3">
             <Compass className="w-3 h-3 text-[#777765]" />
@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreWork, onDiscoverApproach, o
       </motion.div>
 
       {/* Main Editorial Hero Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-end pt-6 md:pt-10 mb-8 relative z-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-14 items-end pt-4 sm:pt-6 md:pt-10 mb-6 sm:mb-8 relative z-10">
         {/* Left Column: Typographic Monumentality with Multi-Layer Parallax */}
         <motion.div
           style={{ y: textColumnY, opacity: textColumnOpacity }}
