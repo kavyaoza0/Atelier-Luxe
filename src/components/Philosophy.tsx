@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { StaggeredHeading } from './StaggeredHeading';
+import { StaggerSection, StaggerItem } from './StaggerSection';
 
 export const Philosophy: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
@@ -33,20 +34,14 @@ export const Philosophy: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 sm:py-24 md:py-36 lg:py-44 bg-[#E8E1D7] text-[#292722] border-t border-[#292722]/10 relative overflow-hidden">
+    <StaggerSection id="philosophy" className="py-16 sm:py-24 md:py-36 lg:py-44 bg-[#E8E1D7] text-[#292722] border-t border-[#292722]/10 relative overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12">
         {/* Folio Header with Animated Hairline Datum */}
-        <div className="relative pb-5 sm:pb-6 mb-8 sm:mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]"
-          >
+        <StaggerItem step={0} className="relative pb-5 sm:pb-6 mb-8 sm:mb-12">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]">
             <span>Studio Manifesto · 08</span>
             <span className="truncate max-w-[160px] sm:max-w-none">Ahmedabad Spatial Philosophy</span>
-          </motion.div>
+          </div>
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
@@ -55,60 +50,42 @@ export const Philosophy: React.FC = () => {
             style={{ originX: 0 }}
             className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#292722]/15"
           />
-        </div>
+        </StaggerItem>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Left Column: Expressive Serif Statement */}
           <div className="lg:col-span-7">
-            <motion.span
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[10px] sm:text-[11px] uppercase tracking-[0.26em] font-medium text-[#777765] block mb-6"
-            >
-              Core Principle
-            </motion.span>
+            <StaggerItem step={1}>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.26em] font-medium text-[#777765] block mb-6">
+                Core Principle
+              </span>
 
-            <StaggeredHeading
-              as="h2"
-              lines={[
-                { text: "We don't design" },
-                { text: 'for the moment.' },
-                { text: 'We design for', italic: true },
-                { text: 'the years that follow.' },
-              ]}
-              delay={0.15}
-              staggerDelay={0.14}
-              duration={0.9}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-[4rem] font-serif font-light leading-[1.08] text-[#292722] tracking-[-0.015em] mb-8"
-            />
+              <StaggeredHeading
+                as="h2"
+                lines={[
+                  { text: "We don't design" },
+                  { text: 'for the moment.' },
+                  { text: 'We design for', italic: true },
+                  { text: 'the years that follow.' },
+                ]}
+                delay={0.15}
+                staggerDelay={0.14}
+                duration={0.9}
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-[4rem] font-serif font-light leading-[1.08] text-[#292722] tracking-[-0.015em] mb-8"
+              />
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="pt-2 max-w-xl"
-            >
-              <p className="text-base sm:text-lg text-[#34332F]/80 font-light leading-relaxed">
-                Enduring materials. Considered decisions. Interiors that grow with you.
-              </p>
-            </motion.div>
+              <div className="pt-2 max-w-xl">
+                <p className="text-base sm:text-lg text-[#34332F]/80 font-light leading-relaxed">
+                  Enduring materials. Considered decisions. Interiors that grow with you.
+                </p>
+              </div>
+            </StaggerItem>
 
             {/* Tenet Pillars Grid with Sequential Reveals & Micro-Interactions */}
-            <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 pt-8 border-t border-[#292722]/15 text-xs text-[#34332F]">
+            <StaggerItem step={2} className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 pt-8 border-t border-[#292722]/15 text-xs text-[#34332F]">
               {tenets.map((tenet, idx) => (
-                <motion.div
+                <div
                   key={tenet.id}
-                  initial={{ opacity: 0, y: 22 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.2 + idx * 0.12,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
                   className="group relative p-3 -m-3 transition-all duration-400 hover:bg-[#FAF8F5]/50 border border-transparent hover:border-[#292722]/10"
                 >
                   <div className="flex items-center justify-between mb-1">
@@ -125,20 +102,14 @@ export const Philosophy: React.FC = () => {
                   <p className="text-[#34332F]/70 font-light text-[11px] leading-relaxed pt-1.5">
                     {tenet.text}
                   </p>
-                </motion.div>
+                </div>
               ))}
-            </div>
+            </StaggerItem>
           </div>
 
           {/* Right Column: Architectural Detail Cropped Photograph with Subtle Kinetic Ambient Drift */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
-              className="relative aspect-[3/4] sm:aspect-[4/5] w-full max-w-md overflow-hidden bg-[#B5A99A] border border-[#292722]/15 shadow-[0_24px_60px_rgba(41,39,34,0.08)] group"
-            >
+          <StaggerItem step={3} className="lg:col-span-5 flex justify-center lg:justify-end">
+            <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full max-w-md overflow-hidden bg-[#B5A99A] border border-[#292722]/15 shadow-[0_24px_60px_rgba(41,39,34,0.08)] group">
               {/* Continuous Ambient Kinetic Drift */}
               <motion.div
                 animate={shouldReduceMotion ? undefined : { y: [0, -6, 0] }}
@@ -166,10 +137,10 @@ export const Philosophy: React.FC = () => {
                   <span className="font-mono text-[9px] opacity-80">Ahmedabadi Sunlight</span>
                 </div>
               </motion.div>
-            </motion.div>
-          </div>
+            </div>
+          </StaggerItem>
         </div>
       </div>
-    </section>
+    </StaggerSection>
   );
 };

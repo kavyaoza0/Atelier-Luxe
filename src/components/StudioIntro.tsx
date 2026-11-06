@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { StaggeredHeading } from './StaggeredHeading';
 import { Magnetic } from './Magnetic';
+import { StaggerSection, StaggerItem } from './StaggerSection';
 
 interface StudioIntroProps {
   onOpenAbout: () => void;
@@ -12,30 +13,21 @@ export const StudioIntro: React.FC<StudioIntroProps> = ({ onOpenAbout }) => {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="studio" className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden">
+    <StaggerSection id="studio" className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
         {/* Section Identifier & Folio */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        <StaggerItem
+          step={0}
           className="flex items-center justify-between mb-8 sm:mb-12 md:mb-16 pb-3 sm:pb-4 border-b border-[#292722]/10 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.24em] font-medium text-[#777765]"
         >
           <span>01 — The Studio</span>
           <span className="truncate max-w-[200px] sm:max-w-none">Ahmedabad Heritage & European Minimalist Discourse</span>
-        </motion.div>
+        </StaggerItem>
 
         {/* Editorial Split Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-16 items-start">
           {/* Left: Oversized Statement */}
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7"
-          >
+          <StaggerItem step={1} className="lg:col-span-7">
             <StaggeredHeading
               as="h2"
               lines={[
@@ -58,13 +50,7 @@ export const StudioIntro: React.FC<StudioIntroProps> = ({ onOpenAbout }) => {
             </div>
 
             {/* Architectural Vignette Image Container with Subtle Ambient Kinetic Drift */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-8 sm:mt-10 max-w-md hidden sm:block overflow-hidden bg-[#E8E1D7] border border-[#292722]/10 group relative shadow-[0_12px_32px_rgba(41,39,34,0.04)]"
-            >
+            <div className="mt-8 sm:mt-10 max-w-md hidden sm:block overflow-hidden bg-[#E8E1D7] border border-[#292722]/10 group relative shadow-[0_12px_32px_rgba(41,39,34,0.04)]">
               <motion.div
                 animate={shouldReduceMotion ? undefined : { y: [0, -5, 0] }}
                 transition={shouldReduceMotion ? undefined : { repeat: Infinity, duration: 8.5, ease: "easeInOut" }}
@@ -88,17 +74,11 @@ export const StudioIntro: React.FC<StudioIntroProps> = ({ onOpenAbout }) => {
                   Plate 01-B · 10mm Recessed Shadow Gap Detail
                 </div>
               </motion.div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </StaggerItem>
 
           {/* Right: Supporting Journal Prose Container */}
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 pt-2 lg:pt-4 space-y-6 sm:space-y-8"
-          >
+          <StaggerItem step={2} className="lg:col-span-5 pt-2 lg:pt-4 space-y-6 sm:space-y-8">
             <p className="text-base sm:text-lg text-[#34332F]/85 font-light leading-relaxed">
               We create thoughtful interiors where architecture, material, light and everyday life come together. Every decision is intentional, every detail considered, and every space designed to feel unmistakably personal.
             </p>
@@ -136,15 +116,12 @@ export const StudioIntro: React.FC<StudioIntroProps> = ({ onOpenAbout }) => {
                 />
               </div>
             </div>
-          </motion.div>
+          </StaggerItem>
         </div>
 
         {/* Editorial Architectural Dimension Strip with delicate hairline borders */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        <StaggerItem
+          step={3}
           className="mt-12 sm:mt-16 md:mt-24 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 pt-6 sm:pt-8 border-t border-[#292722]/10 text-[#34332F]"
         >
           <div className="group transition-transform duration-300 hover:-translate-y-0.5">
@@ -163,8 +140,8 @@ export const StudioIntro: React.FC<StudioIntroProps> = ({ onOpenAbout }) => {
             <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[#777765] block mb-1">Commission</span>
             <span className="font-serif text-lg md:text-xl font-light group-hover:text-[#292722] transition-colors">Select Residencies</span>
           </div>
-        </motion.div>
+        </StaggerItem>
       </div>
-    </section>
+    </StaggerSection>
   );
 };

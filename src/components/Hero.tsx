@@ -52,6 +52,11 @@ export const Hero: React.FC<HeroProps> = ({ onExploreWork, onDiscoverApproach, o
   const bgGridY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? ['0px', '0px'] : ['0px', '80px']);
   const bgGridOpacity = useTransform(scrollYProgress, [0, 0.8], [0.35, 0.05]);
 
+  // Lightweight Background Image Parallax Transformations
+  const bgImageY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? ['0%', '0%'] : ['-4%', '14%']);
+  const bgImageScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1.02, 1.02] : [1.02, 1.12]);
+  const bgImageOpacity = useTransform(scrollYProgress, [0, 0.85], [0.09, 0.02]);
+
   // Hero Bottom Editorial Metadata Strip
   const bottomStripY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? ['0px', '0px'] : ['0px', '-18px']);
   const bottomStripOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0.3]);
@@ -61,6 +66,29 @@ export const Hero: React.FC<HeroProps> = ({ onExploreWork, onDiscoverApproach, o
       ref={heroRef}
       className="relative min-h-[92vh] lg:min-h-screen pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 px-4 sm:px-6 md:px-10 lg:px-12 flex flex-col justify-between max-w-[1440px] mx-auto overflow-hidden"
     >
+      {/* Lightweight Architectural Parallax Background Image Layer */}
+      <motion.div
+        style={{ y: bgImageY, opacity: bgImageOpacity }}
+        className="absolute inset-0 -top-12 -bottom-12 pointer-events-none z-0 overflow-hidden select-none will-change-transform"
+        aria-hidden="true"
+      >
+        <motion.img
+          src="/images/materials_tactile_macro_1791807470321.jpg"
+          alt=""
+          style={{ scale: bgImageScale }}
+          className="w-full h-full object-cover object-center filter grayscale contrast-125 mix-blend-multiply"
+          onError={(e) => {
+            const target = e.currentTarget;
+            const fallback = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80';
+            if (target.src !== fallback) target.src = fallback;
+          }}
+          referrerPolicy="no-referrer"
+        />
+        {/* Soft atmospheric gradient masks for seamless aesthetic integration */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F2EC] via-transparent to-[#F5F2EC]/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F2EC] via-transparent to-[#F5F2EC]" />
+      </motion.div>
+
       {/* Subtle Background Architectural Depth Layer */}
       <motion.div
         style={{ y: bgGridY, opacity: bgGridOpacity }}

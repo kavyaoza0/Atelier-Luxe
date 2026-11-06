@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
 import { servicesData } from '../data/services';
 import { ServiceCard } from './ServiceCard';
 import { StaggeredHeading } from './StaggeredHeading';
 import { Compass, Layers, Hammer } from 'lucide-react';
 import { ServiceDisciplineId } from '../types';
+import { StaggerSection, StaggerItem } from './StaggerSection';
 
 export const Services: React.FC = () => {
   const [expandedId, setExpandedId] = useState<ServiceDisciplineId | null>('architecture');
@@ -26,25 +26,25 @@ export const Services: React.FC = () => {
   };
 
   return (
-    <section
+    <StaggerSection
       id="services"
       className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
-        {/* Section Header Folio with Framer Motion reveal */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        {/* Section Header Folio with StaggerItem step 0 */}
+        <StaggerItem
+          step={0}
           className="flex items-center justify-between pb-4 sm:pb-6 mb-10 sm:mb-14 md:mb-16 border-b border-[#292722]/10 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.26em] text-[#777765]"
         >
           <span>06 — Disciplines & Practice</span>
           <span className="truncate max-w-[200px] sm:max-w-none">Architectural Services · Precision Tolerances</span>
-        </motion.div>
+        </StaggerItem>
 
-        {/* Section Title with staggered lines entrance */}
-        <div className="mb-10 sm:mb-16 md:mb-20 flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8">
+        {/* Section Title & Description with StaggerItem step 1 */}
+        <StaggerItem
+          step={1}
+          className="mb-10 sm:mb-16 md:mb-20 flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8"
+        >
           <div className="max-w-3xl">
             <StaggeredHeading
               as="h2"
@@ -59,47 +59,39 @@ export const Services: React.FC = () => {
             />
           </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="text-sm sm:text-base text-[#34332F]/80 max-w-md font-light leading-relaxed"
-          >
+          <p className="text-sm sm:text-base text-[#34332F]/80 max-w-md font-light leading-relaxed">
             We do not separate architecture from the touch of a door handle. Every project is conceived as an indivisible continuum from topography to bespoke joinery.
-          </motion.p>
-        </div>
+          </p>
+        </StaggerItem>
 
-        {/* 3 Editorial Discipline Cards with 3D Tilt Interaction & Fine-Line Animated Icons */}
-        <motion.div
-          onViewportEnter={() => setInViewSection(true)}
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 pt-2 sm:pt-4 [perspective:1200px]"
-        >
-          {servicesData.map((discipline, index) => {
-            const isExpanded = expandedId === discipline.id;
-            const meta = getDisciplineIconMeta(discipline.id);
+        {/* 3 Editorial Discipline Cards with StaggerItem step 2 */}
+        <StaggerItem step={2}>
+          <div
+            onMouseEnter={() => setInViewSection(true)}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 pt-2 sm:pt-4 [perspective:1200px]"
+          >
+            {servicesData.map((discipline, index) => {
+              const isExpanded = expandedId === discipline.id;
+              const meta = getDisciplineIconMeta(discipline.id);
 
-            return (
-              <ServiceCard
-                key={discipline.id}
-                discipline={discipline}
-                index={index}
-                inViewSection={inViewSection}
-                isExpanded={isExpanded}
-                onToggleExpand={() => toggleExpand(discipline.id)}
-                meta={meta}
-              />
-            );
-          })}
-        </motion.div>
+              return (
+                <ServiceCard
+                  key={discipline.id}
+                  discipline={discipline}
+                  index={index}
+                  inViewSection={inViewSection || true}
+                  isExpanded={isExpanded}
+                  onToggleExpand={() => toggleExpand(discipline.id)}
+                  meta={meta}
+                />
+              );
+            })}
+          </div>
+        </StaggerItem>
 
-        {/* Monograph Craft Continuum Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        {/* Monograph Craft Continuum Banner with StaggerItem step 3 */}
+        <StaggerItem
+          step={3}
           className="mt-12 sm:mt-16 md:mt-20 p-6 sm:p-8 md:p-10 bg-[#E8E1D7]/35 border border-[#292722]/15"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -130,8 +122,8 @@ export const Services: React.FC = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </StaggerItem>
       </div>
-    </section>
+    </StaggerSection>
   );
 };

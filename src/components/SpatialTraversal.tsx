@@ -5,28 +5,30 @@ import {
   VolumeX,
   Maximize2,
   Minimize2,
-  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ArrowUpRight,
-  Sparkles,
   Layers,
   Eye,
   Info,
   X,
   Sliders,
-  MoveDown
+  MoveDown,
+  Sparkles,
 } from 'lucide-react';
 import {
   motion,
   useScroll,
   useTransform,
+  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   AnimatePresence,
+  animate,
 } from 'motion/react';
 import { Project } from '../types';
 import { projects } from '../data/projects';
 import { useCursor } from '../context/CursorContext';
-import { StaggeredHeading } from './StaggeredHeading';
 
 interface Hotspot {
   id: string;
@@ -227,12 +229,16 @@ const CHAMBERS: SpatialChamber[] = [
   },
 ];
 
+// Target progress locations for each chamber along the 0.0 -> 1.0 Z-axis
+const CHAMBER_WAYPOINTS = [0.03, 0.36, 0.63, 0.88];
+
 interface SpatialTraversalProps {
   onOpenProject: (project: Project) => void;
 }
 
 export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProject }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
@@ -246,31 +252,42 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
   const [isAudioActive, setIsAudioActive] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isMouseInteracting, setIsMouseInteracting] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
-  // Scroll tracking across the 480vh container
+  // Unified MotionValue for spatial progression (0.0 to 1.0)
+  // Driven either by page scroll in standard mode OR by interactive controls in immersion mode
+  const activeProgress = useMotionValue(0);
+
+  // Scroll tracking across the sticky section track
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   });
 
-  // Track depth progress from 0m to 48m
+  // Keep activeProgress in sync with page scroll when NOT in full immersion
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    if (!isFullscreen) {
+      activeProgress.set(Math.min(1, Math.max(0, latest)));
+    }
+  });
+
+  // Track depth, telemetry, active chamber, and acoustic modulation whenever activeProgress updates
+  useMotionValueEvent(activeProgress, 'change', (latest) => {
     const rawProgress = Math.min(1, Math.max(0, latest));
     const depth = rawProgress * 48;
     setCurrentDepth(Math.round(depth * 10) / 10);
 
-    // Chamber segmentation
+    // Chamber segmentation with hysteresis
     let idx = 0;
-    if (rawProgress < 0.25) idx = 0;
-    else if (rawProgress < 0.50) idx = 1;
-    else if (rawProgress < 0.75) idx = 2;
+    if (rawProgress < 0.28) idx = 0;
+    else if (rawProgress < 0.53) idx = 1;
+    else if (rawProgress < 0.78) idx = 2;
     else idx = 3;
 
     if (idx !== activeChamberIndex) {
       setActiveChamberIndex(idx);
-      // If audio is playing, modulate pitch gently to signify spatial acoustics
+
+      // Acoustic room tone frequency modulation
       if (oscNodeRef.current && audioCtxRef.current && isAudioActive) {
         const frequencies = [82, 73, 98, 65]; // low resonant architectural room modes
         const targetFreq = frequencies[idx] || 82;
@@ -279,10 +296,11 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
     }
   });
 
-  // Smooth mouse tilt parallax for spatial depth feeling
+  // Mouse tilt parallax for spatial depth feeling
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (shouldReduceMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
     const xRel = (e.clientX - rect.left) / rect.width - 0.5;
     const yRel = (e.clientY - rect.top) / rect.height - 0.5;
     setTilt({
@@ -293,9 +311,138 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
 
   const handleMouseLeave = useCallback(() => {
     setTilt({ x: 0, y: 0 });
-    setIsMouseInteracting(false);
     resetCursor();
   }, [resetCursor]);
+
+  // Jump to specific chamber smoothly
+  const scrollToChamber = (index: number) => {
+    const targetProgress = CHAMBER_WAYPOINTS[index] ?? 0.03;
+
+    if (isFullscreen) {
+      // In immersion mode: animate activeProgress directly
+      animate(activeProgress, targetProgress, {
+        duration: 0.65,
+        ease: [0.16, 1, 0.3, 1],
+      });
+    } else {
+      // In page mode: scroll window to the correct location within the container
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const containerTop = rect.top + window.scrollY;
+      const containerHeight = containerRef.current.offsetHeight;
+      const targetScroll = containerTop + targetProgress * (containerHeight - window.innerHeight);
+
+      window.scrollTo({
+        top: Math.max(0, targetScroll),
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const goToNextChamber = () => {
+    scrollToChamber(Math.min(CHAMBERS.length - 1, activeChamberIndex + 1));
+  };
+
+  const goToPrevChamber = () => {
+    scrollToChamber(Math.max(0, activeChamberIndex - 1));
+  };
+
+  // Toggle Full Immersion Mode
+  const toggleImmersion = async () => {
+    const nextState = !isFullscreen;
+    setIsFullscreen(nextState);
+
+    // Try HTML5 Fullscreen API if available
+    try {
+      if (nextState) {
+        if (containerRef.current && !document.fullscreenElement && containerRef.current.requestFullscreen) {
+          await containerRef.current.requestFullscreen();
+        }
+      } else {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch {
+      // Graceful fallback for iframe environments
+    }
+  };
+
+  // Handle body scroll locking and sync on fullscreen exit
+  useEffect(() => {
+    if (isFullscreen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        // Sync window scroll to the active chamber when exiting immersion
+        if (containerRef.current) {
+          const rect = containerRef.current.getBoundingClientRect();
+          const containerTop = rect.top + window.scrollY;
+          const containerHeight = containerRef.current.offsetHeight;
+          const targetProgress = activeProgress.get();
+          const targetScroll = containerTop + targetProgress * (containerHeight - window.innerHeight);
+          window.scrollTo({ top: Math.max(0, targetScroll), behavior: 'auto' });
+        }
+      };
+    }
+  }, [isFullscreen, activeProgress]);
+
+  // Keyboard navigation for immersion mode
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isFullscreen) {
+        if (e.key === 'Escape') {
+          setIsFullscreen(false);
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          e.preventDefault();
+          goToNextChamber();
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          goToPrevChamber();
+        } else if (['1', '2', '3', '4'].includes(e.key)) {
+          const idx = parseInt(e.key, 10) - 1;
+          scrollToChamber(idx);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen, activeChamberIndex]);
+
+  // Mouse wheel listener in immersion mode for smooth traversing
+  const handleWheelInImmersion = (e: React.WheelEvent) => {
+    if (!isFullscreen) return;
+    e.preventDefault();
+    const delta = e.deltaY * 0.0006;
+    const current = activeProgress.get();
+    const next = Math.min(1, Math.max(0, current + delta));
+    activeProgress.set(next);
+  };
+
+  // Touch swipe handling in immersion mode
+  const touchStartY = useRef<number | null>(null);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isFullscreen) return;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isFullscreen || touchStartY.current === null) return;
+    const currentY = e.touches[0].clientY;
+    const deltaY = touchStartY.current - currentY;
+    touchStartY.current = currentY;
+    const delta = deltaY * 0.002;
+    const current = activeProgress.get();
+    const next = Math.min(1, Math.max(0, current + delta));
+    activeProgress.set(next);
+  };
+
+  const handleTouchEnd = () => {
+    touchStartY.current = null;
+  };
 
   // Procedural subtle architectural acoustic room tone synthesizer
   const toggleSpatialAudio = () => {
@@ -360,7 +507,7 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
     };
   }, []);
 
-  // Atmospheric dust motes / sunbeam canvas particle animation
+  // Atmospheric dust motes canvas particle animation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -442,42 +589,29 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
     };
   }, []);
 
-  // Jump to specific chamber smoothly
-  const scrollToChamber = (index: number) => {
-    if (!containerRef.current) return;
-    const containerTop = containerRef.current.offsetTop;
-    const containerHeight = containerRef.current.offsetHeight;
-    const targetScroll = containerTop + (index / 4 + 0.03) * (containerHeight - window.innerHeight);
-
-    window.scrollTo({
-      top: targetScroll,
-      behavior: 'smooth',
-    });
-  };
-
-  // Chamber 0 Motion transforms
-  const chamber0Scale = useTransform(scrollYProgress, [0, 0.15, 0.24, 0.29], [1.0, 1.05, 1.25, 1.45]);
-  const chamber0Opacity = useTransform(scrollYProgress, [0, 0.16, 0.24, 0.28], [1, 1, 0.4, 0]);
-  const chamber0Blur = useTransform(scrollYProgress, [0, 0.16, 0.25], ['blur(0px)', 'blur(0px)', 'blur(6px)']);
+  // Chamber 0 Motion transforms (derived from activeProgress)
+  const chamber0Scale = useTransform(activeProgress, [0, 0.15, 0.24, 0.32], [1.0, 1.05, 1.25, 1.45]);
+  const chamber0Opacity = useTransform(activeProgress, [0, 0.16, 0.24, 0.30], [1, 1, 0.35, 0]);
+  const chamber0Blur = useTransform(activeProgress, [0, 0.16, 0.28], ['blur(0px)', 'blur(0px)', 'blur(6px)']);
 
   // Chamber 1 Motion transforms
-  const chamber1Scale = useTransform(scrollYProgress, [0.18, 0.26, 0.40, 0.49, 0.54], [0.82, 1.0, 1.05, 1.24, 1.45]);
-  const chamber1Opacity = useTransform(scrollYProgress, [0.18, 0.26, 0.42, 0.49, 0.53], [0, 1, 1, 0.4, 0]);
-  const chamber1Blur = useTransform(scrollYProgress, [0.18, 0.26, 0.42, 0.50], ['blur(6px)', 'blur(0px)', 'blur(0px)', 'blur(6px)']);
+  const chamber1Scale = useTransform(activeProgress, [0.18, 0.26, 0.40, 0.49, 0.56], [0.84, 1.0, 1.05, 1.24, 1.45]);
+  const chamber1Opacity = useTransform(activeProgress, [0.18, 0.26, 0.42, 0.49, 0.55], [0, 1, 1, 0.35, 0]);
+  const chamber1Blur = useTransform(activeProgress, [0.18, 0.26, 0.42, 0.52], ['blur(6px)', 'blur(0px)', 'blur(0px)', 'blur(6px)']);
 
   // Chamber 2 Motion transforms
-  const chamber2Scale = useTransform(scrollYProgress, [0.43, 0.51, 0.65, 0.74, 0.79], [0.82, 1.0, 1.05, 1.24, 1.45]);
-  const chamber2Opacity = useTransform(scrollYProgress, [0.43, 0.51, 0.67, 0.74, 0.78], [0, 1, 1, 0.4, 0]);
-  const chamber2Blur = useTransform(scrollYProgress, [0.43, 0.51, 0.67, 0.75], ['blur(6px)', 'blur(0px)', 'blur(0px)', 'blur(6px)']);
+  const chamber2Scale = useTransform(activeProgress, [0.43, 0.51, 0.65, 0.74, 0.81], [0.84, 1.0, 1.05, 1.24, 1.45]);
+  const chamber2Opacity = useTransform(activeProgress, [0.43, 0.51, 0.67, 0.74, 0.80], [0, 1, 1, 0.35, 0]);
+  const chamber2Blur = useTransform(activeProgress, [0.43, 0.51, 0.67, 0.77], ['blur(6px)', 'blur(0px)', 'blur(0px)', 'blur(6px)']);
 
   // Chamber 3 Motion transforms
-  const chamber3Scale = useTransform(scrollYProgress, [0.68, 0.76, 0.90, 1.0], [0.82, 1.0, 1.04, 1.1]);
-  const chamber3Opacity = useTransform(scrollYProgress, [0.68, 0.76, 0.90, 1.0], [0, 1, 1, 1]);
-  const chamber3Blur = useTransform(scrollYProgress, [0.68, 0.76, 1.0], ['blur(6px)', 'blur(0px)', 'blur(0px)']);
+  const chamber3Scale = useTransform(activeProgress, [0.68, 0.76, 0.90, 1.0], [0.84, 1.0, 1.04, 1.1]);
+  const chamber3Opacity = useTransform(activeProgress, [0.68, 0.76, 0.90, 1.0], [0, 1, 1, 1]);
+  const chamber3Blur = useTransform(activeProgress, [0.68, 0.76, 1.0], ['blur(6px)', 'blur(0px)', 'blur(0px)']);
 
   // Camera depth wireframe portal tunnel scale
-  const tunnelScale = useTransform(scrollYProgress, [0, 1], [0.9, 2.8]);
-  const tunnelOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0.25, 0.45, 0.45, 0.2]);
+  const tunnelScale = useTransform(activeProgress, [0, 1], [0.9, 2.8]);
+  const tunnelOpacity = useTransform(activeProgress, [0, 0.05, 0.95, 1], [0.25, 0.45, 0.45, 0.2]);
 
   const activeChamber = CHAMBERS[activeChamberIndex];
   const activeProject = projects.find((p) => p.id === activeChamber.projectId);
@@ -486,13 +620,20 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
     <section
       ref={containerRef}
       id="traverse"
-      className={`relative h-[320vh] sm:h-[400vh] lg:h-[480vh] bg-[#141311] text-[#F5F2EC] ${
-        isFullscreen ? 'fixed inset-0 z-50 h-screen overflow-y-auto' : ''
-      }`}
+      className="relative h-[320vh] sm:h-[400vh] lg:h-[480vh] bg-[#141311] text-[#F5F2EC]"
     >
-      {/* Sticky Spatial Viewport Container with Dynamic Viewport Units */}
+      {/* Viewport Container: Switches to Fixed Overlay when in Full Immersion Mode */}
       <div
-        className="sticky top-0 h-[100dvh] min-h-[560px] max-h-screen w-full overflow-hidden flex flex-col justify-between select-none"
+        ref={viewportRef}
+        onWheel={handleWheelInImmersion}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className={
+          isFullscreen
+            ? 'fixed inset-0 z-50 h-[100dvh] w-full overflow-hidden flex flex-col justify-between select-none bg-[#141311]'
+            : 'sticky top-0 h-[100dvh] min-h-[560px] max-h-screen w-full overflow-hidden flex flex-col justify-between select-none'
+        }
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -546,7 +687,7 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 opacity: chamber0Opacity,
                 filter: chamber0Blur,
               }}
-              className="absolute inset-0 w-full h-full will-change-transform pointer-events-auto"
+              className="absolute inset-0 w-full h-full will-change-transform pointer-events-none select-none"
             >
               <img
                 src={CHAMBERS[0].image}
@@ -569,7 +710,7 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 opacity: chamber1Opacity,
                 filter: chamber1Blur,
               }}
-              className="absolute inset-0 w-full h-full will-change-transform pointer-events-auto"
+              className="absolute inset-0 w-full h-full will-change-transform pointer-events-none select-none"
             >
               <img
                 src={CHAMBERS[1].image}
@@ -592,7 +733,7 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 opacity: chamber2Opacity,
                 filter: chamber2Blur,
               }}
-              className="absolute inset-0 w-full h-full will-change-transform pointer-events-auto"
+              className="absolute inset-0 w-full h-full will-change-transform pointer-events-none select-none"
             >
               <img
                 src={CHAMBERS[2].image}
@@ -615,7 +756,7 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 opacity: chamber3Opacity,
                 filter: chamber3Blur,
               }}
-              className="absolute inset-0 w-full h-full will-change-transform pointer-events-auto"
+              className="absolute inset-0 w-full h-full will-change-transform pointer-events-none select-none"
             >
               <img
                 src={CHAMBERS[3].image}
@@ -649,14 +790,13 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 className="group relative flex items-center justify-center w-11 h-11 focus:outline-none cursor-pointer"
                 aria-label={`Inspect detail: ${spot.title}`}
               >
-                {/* Architectural reticle with smooth hover expansion */}
-                <span className="absolute w-8 h-8 rounded-full border border-[#E8E1D7]/30 scale-90 group-hover:scale-125 group-hover:border-[#E8E1D7]/70 transition-all duration-300" />
-                <span className="relative flex items-center justify-center w-6 h-6 rounded-full bg-[#141311]/85 border border-[#E8E1D7]/60 text-[#E8E1D7] backdrop-blur-md group-hover:border-[#E8E1D7] group-hover:bg-[#E8E1D7] group-hover:text-[#141311] transition-all">
-                  <span className="text-xs font-mono font-medium">+</span>
-                </span>
+                {/* Sonar Radar Pulse Ring */}
+                <span className="absolute w-8 h-8 rounded-full border border-[#E8E1D7]/50 animate-ping opacity-75" />
+                <span className="absolute w-5 h-5 rounded-full border border-[#E8E1D7] group-hover:scale-125 transition-transform duration-300" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#E8E1D7] group-hover:scale-150 transition-transform" />
 
-                {/* Floating Tooltip Label */}
-                <span className="absolute left-10 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#141311]/90 border border-[#E8E1D7]/20 backdrop-blur-md px-2.5 py-1 text-[10px] tracking-[0.16em] uppercase text-[#E8E1D7] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg hidden sm:block">
+                {/* Micro Label Tooltip On Hover */}
+                <span className="absolute left-full ml-2.5 px-2 py-1 bg-[#141311]/90 backdrop-blur-md border border-[#E8E1D7]/20 text-[9px] uppercase tracking-[0.18em] text-[#E8E1D7] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none font-mono">
                   {spot.title}
                 </span>
               </button>
@@ -664,42 +804,51 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
           ))}
         </div>
 
-        {/* TOP TELEMETRY HUD BAR */}
-        <header className="relative z-30 pt-3 sm:pt-6 px-3.5 sm:px-8 md:px-12 flex items-center justify-between border-b border-[#E8E1D7]/15 pb-2.5 sm:pb-4 bg-gradient-to-b from-[#141311]/95 via-[#141311]/70 to-transparent">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <Compass className="w-3.5 h-3.5 text-[#E8E1D7] shrink-0" />
-            <div className="flex flex-col">
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.24em] text-[#E8E1D7] font-medium">
-                Spatial Traversal · Z-Axis
-              </span>
-              <div className="flex items-center gap-1.5 text-[8px] sm:text-[9px] uppercase tracking-[0.14em] text-[#A69F91]">
-                <span>{activeChamber.code}</span>
-                <span className="hidden sm:inline">· {activeChamber.elevation}</span>
-                <span className="text-[#E8E1D7] font-mono sm:hidden">· {currentDepth.toFixed(1)}m</span>
-              </div>
+        {/* TOP HUD BAR */}
+        <header className="relative z-30 pt-3 sm:pt-6 px-4 sm:px-8 md:px-12 flex items-center justify-between border-b border-[#E8E1D7]/10 pb-2.5 sm:pb-3 bg-gradient-to-b from-[#141311]/95 to-transparent">
+          {/* Left Title & Live Depth Readout */}
+          <div className="flex items-center gap-3 sm:gap-6">
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-[#E8E1D7] font-mono">
+              <Compass className="w-3.5 h-3.5 text-[#E8E1D7]" />
+              <span className="font-semibold text-white">3D Spatial Traversal</span>
+              <span className="text-[#A69F91] hidden md:inline">· Monograph 08</span>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-2 text-[9px] uppercase tracking-[0.18em] font-mono text-[#A69F91] border-l border-[#E8E1D7]/15 pl-4">
+              <span>Datum:</span>
+              <span className="text-[#E8E1D7] font-medium">{activeChamber.elevation}</span>
+              <span className="opacity-30">|</span>
+              <span>Light:</span>
+              <span className="text-[#E8E1D7] font-medium">{activeChamber.lightingTemp}</span>
             </div>
           </div>
 
-          {/* Center Coordinates & Depth Telemetry (Desktop) */}
-          <div className="hidden lg:flex items-center gap-6 font-mono text-[10px] tracking-[0.2em] text-[#E8E1D7]/80">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[#A69F91]">DEPTH:</span>
-              <span className="text-[#F5F2EC] font-semibold">{currentDepth.toFixed(1)}m</span>
-              <span className="text-[#A69F91]">/ 48.0m</span>
-            </div>
-            <span className="text-[#E8E1D7]/20">|</span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[#A69F91]">LUX:</span>
-              <span>{activeChamber.luxLevel}</span>
-            </div>
-            <span className="text-[#E8E1D7]/20">|</span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[#A69F91]">ACOUSTICS:</span>
-              <span>{activeChamber.acousticReverb}</span>
-            </div>
+          {/* Center Chamber Step Controls */}
+          <div className="flex items-center gap-1 sm:gap-2 bg-[#292722]/80 backdrop-blur-md px-2 py-1 border border-[#E8E1D7]/15">
+            <button
+              type="button"
+              onClick={goToPrevChamber}
+              disabled={activeChamberIndex === 0}
+              className="p-1 text-[#E8E1D7] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              title="Previous chamber (Left arrow)"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            <span className="text-[10px] font-mono tracking-widest text-[#E8E1D7] px-1">
+              0{activeChamberIndex + 1} / 04
+            </span>
+            <button
+              type="button"
+              onClick={goToNextChamber}
+              disabled={activeChamberIndex === CHAMBERS.length - 1}
+              className="p-1 text-[#E8E1D7] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              title="Next chamber (Right arrow / Space)"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
 
-          {/* Right Action Tools: Audio Ambiance & Fullscreen */}
+          {/* Right Action Tools: Audio Ambiance & Fullscreen Immersion */}
           <div className="flex items-center gap-1.5 sm:gap-3">
             <button
               type="button"
@@ -713,22 +862,27 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
 
             <button
               type="button"
-              onClick={() => setIsFullscreen(!isFullscreen)}
-              className="inline-flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-medium bg-[#292722]/80 hover:bg-[#292722] text-[#E8E1D7] border border-[#E8E1D7]/20 transition-colors cursor-pointer"
-              title={isFullscreen ? 'Exit full immersion' : 'Full immersion'}
+              onClick={toggleImmersion}
+              className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-medium transition-colors cursor-pointer border ${
+                isFullscreen
+                  ? 'bg-[#E8E1D7] text-[#141311] border-[#E8E1D7] shadow-sm font-semibold'
+                  : 'bg-[#292722]/80 hover:bg-[#292722] text-[#E8E1D7] border-[#E8E1D7]/20'
+              }`}
+              title={isFullscreen ? 'Exit full immersion (Esc)' : 'Enter full immersion'}
             >
               {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">{isFullscreen ? 'Exit' : 'Immersion'}</span>
+              <span>{isFullscreen ? 'Exit Immersion' : 'Immersion'}</span>
             </button>
           </div>
         </header>
 
         {/* CENTER LATERAL HUD OVERLAYS */}
-        <div className="relative z-30 px-4 sm:px-8 md:px-12 flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between pointer-events-none pt-2 sm:pt-0">
+        <div className="relative z-30 px-4 sm:px-8 md:px-12 flex-1 flex flex-col sm:flex-row items-start justify-between pointer-events-none pt-3 sm:pt-5 lg:pt-6 pb-2">
           {/* Desktop Left Spatial Chambers Waypoint Navigation */}
-          <div className="pointer-events-auto hidden sm:flex flex-col gap-1.5 sm:gap-2 max-w-[280px]">
-            <div className="text-[9px] uppercase tracking-[0.24em] text-[#A69F91] mb-1 font-mono">
-              Chambers (Z-Axis)
+          <div className="pointer-events-auto hidden sm:flex flex-col gap-1.5 sm:gap-2 max-w-[280px] bg-[#141311]/75 backdrop-blur-md p-3 sm:p-4 border border-[#E8E1D7]/15">
+            <div className="text-[9px] uppercase tracking-[0.24em] text-[#A69F91] mb-1 font-mono flex items-center justify-between">
+              <span>Chambers (Z-Axis)</span>
+              <span className="text-[#E8E1D7] font-semibold">{activeChamber.number}/04</span>
             </div>
             {CHAMBERS.map((ch, idx) => {
               const isActive = idx === activeChamberIndex;
@@ -770,8 +924,8 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
             })}
           </div>
 
-          {/* Right Blueprint Floorplan Minimap */}
-          <div className="pointer-events-auto hidden md:flex flex-col items-end gap-3 bg-[#141311]/75 backdrop-blur-md p-4 border border-[#E8E1D7]/15">
+          {/* Right Blueprint Floorplan Minimap with Interactive Depth Scrubber */}
+          <div className="pointer-events-auto hidden md:flex flex-col items-end gap-2.5 bg-[#141311]/80 backdrop-blur-md p-4 border border-[#E8E1D7]/15 max-w-[240px]">
             <div className="flex items-center justify-between w-full gap-4 text-[9px] uppercase tracking-[0.22em] text-[#A69F91] font-mono border-b border-[#E8E1D7]/10 pb-2">
               <span>Section Elevation</span>
               <span className="text-[#E8E1D7] font-semibold">{currentDepth.toFixed(1)}m</span>
@@ -852,9 +1006,25 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
               />
             </svg>
 
-            <div className="flex items-center justify-between w-full text-[9px] uppercase tracking-[0.16em] text-[#A69F91] pt-1">
-              <span>Entry Axis</span>
-              <span>Garden Exit</span>
+            {/* Interactive Depth Scrubber */}
+            <div className="w-full pt-1">
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.002"
+                value={activeProgress.get()}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value);
+                  activeProgress.set(val);
+                }}
+                className="w-full accent-[#E8E1D7] cursor-pointer h-1.5 bg-[#E8E1D7]/20 rounded-none touch-pan-x"
+                aria-label="Spatial depth scrubber"
+              />
+              <div className="flex items-center justify-between w-full text-[8px] uppercase tracking-[0.16em] text-[#A69F91] pt-1 font-mono">
+                <span>0.0m Ingress</span>
+                <span>48.0m Egress</span>
+              </div>
             </div>
           </div>
         </div>
@@ -900,12 +1070,15 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
                 &ldquo;{activeChamber.quote}&rdquo;
               </p>
 
-              {/* Material Chips */}
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-2 sm:mt-3">
+              {/* Material Palette Tags */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5 mt-2.5 sm:mt-4">
+                <span className="text-[9px] font-mono uppercase tracking-[0.22em] text-[#A69F91] mr-1 hidden sm:inline">
+                  Materials:
+                </span>
                 {activeChamber.materials.map((mat) => (
                   <span
                     key={mat}
-                    className="text-[8px] sm:text-[9px] uppercase tracking-[0.12em] sm:tracking-[0.16em] px-2 py-0.5 sm:py-1 bg-[#292722]/80 border border-[#E8E1D7]/20 text-[#E8E1D7]"
+                    className="text-[9px] sm:text-[10px] uppercase tracking-[0.14em] font-mono px-2.5 py-1 bg-[#141311]/90 border border-[#E8E1D7]/30 text-[#F5F2EC] backdrop-blur-sm shadow-xs"
                   >
                     {mat}
                   </span>
@@ -914,18 +1087,35 @@ export const SpatialTraversal: React.FC<SpatialTraversalProps> = ({ onOpenProjec
             </div>
 
             {/* Right: Scroll Guidance & Project Archival Action */}
-            <div className="md:col-span-6 lg:col-span-5 flex flex-col md:items-end justify-between gap-2 sm:gap-5">
-              {/* Primary Interactive Scroll Cue */}
-              <div className="hidden sm:flex group items-center gap-2.5 sm:gap-3 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-[#141311]/85 backdrop-blur-md border border-[#E8E1D7]/20 shadow-md">
-                <div className="flex flex-col items-center">
-                  <MoveDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E8E1D7] group-hover:translate-y-0.5 transition-transform duration-300" />
+            <div className="md:col-span-6 lg:col-span-5 flex flex-col md:items-end justify-between gap-2 sm:gap-4">
+              {/* Primary Interactive Navigation & Scroll Cue */}
+              <div className="flex items-center gap-2 sm:gap-3 px-3 py-2 bg-[#141311]/90 backdrop-blur-md border border-[#E8E1D7]/20 shadow-md">
+                <div className="flex items-center gap-1.5 text-xs text-[#E8E1D7]">
+                  <button
+                    type="button"
+                    onClick={goToPrevChamber}
+                    disabled={activeChamberIndex === 0}
+                    className="p-1 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="Previous Chamber"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goToNextChamber}
+                    disabled={activeChamberIndex === CHAMBERS.length - 1}
+                    className="p-1 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="Next Chamber"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-[9px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.22em] font-medium text-[#F5F2EC]">
-                    Scroll Vertically to Traverse
+                <div className="flex flex-col border-l border-[#E8E1D7]/20 pl-2.5">
+                  <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-medium text-[#F5F2EC]">
+                    {isFullscreen ? 'Scroll Wheel / Keys to Traverse' : 'Scroll Vertically to Traverse'}
                   </span>
-                  <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.14em] text-[#A69F91]">
-                    Depth: {currentDepth.toFixed(1)}m of 48.0m · 3D Perspective
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.14em] text-[#A69F91] font-mono">
+                    Depth: {currentDepth.toFixed(1)}m of 48.0m
                   </span>
                 </div>
               </div>

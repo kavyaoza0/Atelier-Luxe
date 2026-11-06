@@ -17,7 +17,7 @@ export const servicesData: ServiceDisciplineItem[] = [
     keyMilestone: '1:50 Physical Plaster Massing Models & Envelope Mockup',
     toleranceSpec: 'ORIENTATION ACCURACY: ±0.5° · STRUCTURAL DATUM: MONOLITHIC',
     leadArchitectQuote: 'A building should feel as though it were quarried directly from its terrain, catching the sun with measured reverence.',
-    photographyAsset: '/src/assets/images/detail_courtyard_light_1791808661946.jpg',
+    photographyAsset: '/images/detail_courtyard_light_1791808661946.jpg',
     photoCaption: 'Aperture Geometry · Solar incidence study on monolithic travertine courtyard'
   },
   {
@@ -36,7 +36,7 @@ export const servicesData: ServiceDisciplineItem[] = [
     keyMilestone: '1:1 Tactile Material Sample Trays & Physical Light Mockup',
     toleranceSpec: 'SHADOW GAP TOLERANCE: ±1.0MM · COLOR ACCURACY: CRI > 98',
     leadArchitectQuote: 'True luxury within the home is quietude: the absence of glare, the dampening of harsh sound, and the honesty of cool stone under hand.',
-    photographyAsset: '/src/assets/images/detail_travertine_joinery_1791808649499.jpg',
+    photographyAsset: '/images/detail_travertine_joinery_1791808649499.jpg',
     photoCaption: 'Threshold Junction · Unfilled travertine plinth meeting hand-troweled lime wall'
   },
   {
@@ -55,7 +55,7 @@ export const servicesData: ServiceDisciplineItem[] = [
     keyMilestone: 'Full-Scale Joinery Corner Prototypes & Foundry Castings',
     toleranceSpec: 'CABINETRY CLEARANCE: ±1.5MM · PATINA PROFILE: NATURAL BOTANICAL OXIDATION',
     leadArchitectQuote: 'When you grasp a door pull or open a library drawer, the weight, resistance, and tactile warmth should feel inevitable.',
-    photographyAsset: '/src/assets/images/detail_bespoke_oak_library_1791808673965.jpg',
+    photographyAsset: '/images/detail_bespoke_oak_library_1791808673965.jpg',
     photoCaption: 'Timber Craft · Wire-brushed smoked oak bookcase with patinated bronze reveals'
   }
 ];

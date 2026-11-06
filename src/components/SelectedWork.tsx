@@ -5,6 +5,7 @@ import { Project } from '../types';
 import { projects } from '../data/projects';
 import { useCursor } from '../context/CursorContext';
 import { StaggeredHeading } from './StaggeredHeading';
+import { StaggerSection, StaggerItem } from './StaggerSection';
 
 interface SelectedWorkProps {
   onOpenProject: (project: Project) => void;
@@ -58,7 +59,12 @@ const ParallaxImageFrame: React.FC<ParallaxImageFrameProps> = ({
   const y = useTransform(
     scrollYProgress,
     [0, 1],
-    shouldReduceMotion ? ['0px', '0px'] : ['-28px', '28px']
+    shouldReduceMotion ? ['0%', '0%'] : ['-7%', '7%']
+  );
+  const imageScale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    shouldReduceMotion ? [1.12, 1.12] : [1.11, 1.18]
   );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -109,8 +115,8 @@ const ParallaxImageFrame: React.FC<ParallaxImageFrameProps> = ({
         <motion.img
           src={src}
           alt={alt}
-          style={{ y, scale: 1.14 }}
-          className="w-full h-full object-cover will-change-transform transition-all duration-700 ease-out group-hover:scale-[1.17]"
+          style={{ y, scale: imageScale }}
+          className="w-full h-full object-cover will-change-transform transition-all duration-700 ease-out group-hover:scale-[1.19]"
           onError={(e) => {
             const target = e.currentTarget;
             const fallback = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85';
@@ -138,6 +144,29 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onOpenProject }) => 
   const shouldReduceMotion = useReducedMotion();
   const { setCursor, resetCursor } = useCursor();
 
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: sectionScrollY } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  // Section-wide lightweight parallax background image transformations
+  const bgImageY = useTransform(
+    sectionScrollY,
+    [0, 1],
+    shouldReduceMotion ? ['0%', '0%'] : ['-9%', '9%']
+  );
+  const bgImageScale = useTransform(
+    sectionScrollY,
+    [0, 1],
+    shouldReduceMotion ? [1, 1] : [1.02, 1.09]
+  );
+  const bgImageOpacity = useTransform(
+    sectionScrollY,
+    [0, 0.25, 0.75, 1],
+    [0.02, 0.08, 0.08, 0.02]
+  );
+
   const togglePlateImage = (e: React.MouseEvent, projectId: string) => {
     e.stopPropagation();
     setActiveDetailPlate((prev) => ({
@@ -152,11 +181,34 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onOpenProject }) => 
       : projects.filter((p) => p.category === activeFilter);
 
   return (
-    <section id="work" className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#F5F2EC] border-t border-[#292722]/10 relative">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
+    <StaggerSection id="work" className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden">
+      {/* Lightweight Architectural Parallax Background Image Layer */}
+      <motion.div
+        style={{ y: bgImageY, opacity: bgImageOpacity }}
+        className="absolute inset-0 -top-16 -bottom-16 pointer-events-none z-0 overflow-hidden select-none will-change-transform"
+        aria-hidden="true"
+      >
+        <motion.img
+          src="/images/detail_courtyard_light_1791808661946.jpg"
+          alt=""
+          style={{ scale: bgImageScale }}
+          className="w-full h-full object-cover object-center filter grayscale contrast-125 mix-blend-multiply"
+          onError={(e) => {
+            const target = e.currentTarget;
+            const fallback = 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1600&q=80';
+            if (target.src !== fallback) target.src = fallback;
+          }}
+          referrerPolicy="no-referrer"
+        />
+        {/* Soft architectural gradient masks for depth and legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F2EC] via-transparent to-[#F5F2EC]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F2EC] via-transparent to-[#F5F2EC]" />
+      </motion.div>
+
+      <div ref={sectionRef} className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
         {/* Header Strip with Label, Filter Controls & View Switcher */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-16 md:mb-20 pb-6 sm:pb-8 border-b border-[#292722]/10">
-          <div>
+          <StaggerItem step={0}>
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.22em] sm:tracking-[0.26em] font-medium text-[#777765] mb-3 sm:mb-4">
               <span>02 — Selected Work</span>
               <span aria-hidden="true">·</span>
@@ -173,9 +225,9 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onOpenProject }) => 
               duration={0.9}
               className="text-3xl sm:text-5xl md:text-6xl font-serif font-light text-[#292722] tracking-[-0.01em]"
             />
-          </div>
+          </StaggerItem>
 
-          <div className="w-full lg:w-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <StaggerItem step={1} className="w-full lg:w-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             {/* Typology Filter Tabs */}
             <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center gap-1 p-1 bg-[#E8E1D7]/70 border border-[#292722]/10 shrink-0">
               <button
@@ -251,10 +303,11 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onOpenProject }) => 
                 <Grid3X3 className="w-3.5 h-3.5" />
               </button>
             </div>
-          </div>
+          </StaggerItem>
         </div>
 
-        {/* View Mode: Architectural Index View (2-Column Grid) */}
+        {/* View Mode: Architectural Index View & Spread View Containers */}
+        <StaggerItem step={2}>
         {viewMode === 'index' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-14">
             {filteredProjects.map((project, index) => (
@@ -640,7 +693,8 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onOpenProject }) => 
             })}
           </div>
         )}
+        </StaggerItem>
       </div>
-    </section>
+    </StaggerSection>
   );
 };

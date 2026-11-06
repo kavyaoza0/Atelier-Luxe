@@ -4,6 +4,7 @@ import { Plus, Minus, Check, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { StaggeredHeading } from './StaggeredHeading';
 import { Magnetic } from './Magnetic';
+import { StaggerSection, StaggerItem } from './StaggerSection';
 
 interface PhaseMeta {
   duration: string;
@@ -40,32 +41,19 @@ export const Approach: React.FC = () => {
   };
 
   return (
-    <section id="approach" className="py-16 sm:py-24 md:py-32 lg:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden">
+    <StaggerSection id="approach" className="py-16 sm:py-24 md:py-32 lg:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12">
         {/* Section Header Folio with Hairline Datum */}
-        <div className="relative pb-6 mb-10 md:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]"
-          >
+        <StaggerItem step={0} className="relative pb-6 mb-10 md:mb-16">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]">
             <span>07 — How We Work</span>
             <span className="hidden sm:inline">Architectural Methodology & Milestone Timeline</span>
-          </motion.div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{ originX: 0 }}
-            className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#292722]/15"
-          />
-        </div>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#292722]/15" />
+        </StaggerItem>
 
         {/* Section Title with Staggered Lines */}
-        <div className="mb-10 sm:mb-14 md:mb-20">
+        <StaggerItem step={1} className="mb-10 sm:mb-14 md:mb-20">
           <StaggeredHeading
             as="h2"
             lines={[
@@ -77,10 +65,10 @@ export const Approach: React.FC = () => {
             duration={0.9}
             className="text-3xl sm:text-5xl md:text-6xl font-serif font-light text-[#292722] tracking-[-0.01em]"
           />
-        </div>
+        </StaggerItem>
 
         {/* Interactive Architectural Milestone Progress Connector Track */}
-        <div className="mb-12 sm:mb-16 md:mb-20 bg-[#E8E1D7]/60 border border-[#292722]/15 p-4 sm:p-6 md:p-8 backdrop-blur-xs">
+        <StaggerItem step={2} className="mb-12 sm:mb-16 md:mb-20 bg-[#E8E1D7]/60 border border-[#292722]/15 p-4 sm:p-6 md:p-8 backdrop-blur-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 sm:pb-4 border-b border-[#292722]/10 text-xs">
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#1E1B18]" />
@@ -148,10 +136,10 @@ export const Approach: React.FC = () => {
               })}
             </div>
           </div>
-        </div>
+        </StaggerItem>
 
-        {/* 3 Editorial Columns with Gallery Monograph Dark Charcoal Styling */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 items-start">
+        {/* 3 Editorial Columns with StaggerItem step 3 */}
+        <StaggerItem step={3} className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 items-start">
           {approachSteps.map((step, index) => {
             const isActive = activeStep === step.number;
             const meta = PHASE_METAS[step.number];
@@ -259,16 +247,10 @@ export const Approach: React.FC = () => {
               </motion.div>
             );
           })}
-        </div>
+        </StaggerItem>
 
-        {/* Architectural Methodology Vignette Container with Continuous Ambient Kinetic Drift */}
-        <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-14 sm:mt-20 md:mt-24 pt-6 sm:pt-8 border-t border-[#292722]/10"
-        >
+        {/* Architectural Methodology Vignette Container with StaggerItem step 4 */}
+        <StaggerItem step={4} className="mt-14 sm:mt-20 md:mt-24 pt-6 sm:pt-8 border-t border-[#292722]/10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center bg-[#E8E1D7]/50 p-5 sm:p-8 md:p-10 border border-[#292722]/15 shadow-[0_12px_36px_rgba(41,39,34,0.04)]">
             <div className="lg:col-span-5 relative aspect-[16/10] overflow-hidden bg-[#292722] border border-[#292722]/15 group">
               <motion.div
@@ -315,8 +297,8 @@ export const Approach: React.FC = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </StaggerItem>
       </div>
-    </section>
+    </StaggerSection>
   );
 };

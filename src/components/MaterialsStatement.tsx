@@ -5,6 +5,7 @@ import { Sun, Compass, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { StaggeredHeading } from './StaggeredHeading';
 import { Magnetic } from './Magnetic';
+import { StaggerSection, StaggerItem } from './StaggerSection';
 
 interface SensoryMetric {
   label: string;
@@ -106,35 +107,22 @@ export const MaterialsStatement: React.FC = () => {
   const activeMetrics = MATERIAL_SENSORY_METRICS[selectedMaterial.id] || MATERIAL_SENSORY_METRICS['travertine'];
 
   return (
-    <section
+    <StaggerSection
       id="materials"
-      ref={sectionRef}
       className="py-16 sm:py-24 md:py-32 lg:py-36 bg-[#E8E1D7]/50 border-t border-[#292722]/10 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12">
         {/* Section Header Folio with Animated Expanding Hairline */}
-        <div className="relative pb-4 sm:pb-6 mb-8 sm:mb-10 md:mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.26em] text-[#777765]"
-          >
+        <StaggerItem step={0} className="relative pb-4 sm:pb-6 mb-8 sm:mb-10 md:mb-12">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.26em] text-[#777765]">
             <span>05 — Material Study · Geology & Provenance</span>
             <span className="hidden sm:inline">Tactile Palette Archive & Solar Ingress Simulation</span>
-          </motion.div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{ originX: 0 }}
-            className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#292722]/15"
-          />
-        </div>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#292722]/15" />
+        </StaggerItem>
 
         {/* Full-width Immersive Photography Frame with Editorial Overlay & Micro-Parallax */}
+        <StaggerItem step={1}>
         <div
           ref={heroImageContainerRef}
           className="relative min-h-[380px] sm:min-h-0 aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/10] w-full overflow-hidden bg-[#292722] border border-[#292722]/12 shadow-[0_28px_70px_rgba(41,39,34,0.09)] mb-10 sm:mb-14 md:mb-16 select-none"
@@ -229,9 +217,10 @@ export const MaterialsStatement: React.FC = () => {
             </div>
           </div>
         </div>
+        </StaggerItem>
 
         {/* Tactile Material Lab & Provenance Inspector */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pt-4 items-start">
+        <StaggerItem step={2} className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pt-4 items-start">
           {/* Left Column: Specimen Selection with Magnetic Touch */}
           <div className="lg:col-span-4">
             <div className="flex items-center gap-2 mb-3">
@@ -390,8 +379,8 @@ export const MaterialsStatement: React.FC = () => {
               </motion.div>
             </AnimatePresence>
           </div>
-        </div>
+        </StaggerItem>
       </div>
-    </section>
+    </StaggerSection>
   );
 };

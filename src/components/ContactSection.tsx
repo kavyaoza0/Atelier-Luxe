@@ -3,6 +3,7 @@ import { ArrowUpRight, CheckCircle2, Mail, MapPin, Instagram, Clock, Phone, Spar
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { StaggeredHeading } from './StaggeredHeading';
 import { Magnetic } from './Magnetic';
+import { StaggerSection, StaggerItem } from './StaggerSection';
 
 interface TypologyOption {
   id: string;
@@ -124,20 +125,14 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-16 sm:py-24 md:py-32 lg:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative">
+    <StaggerSection id="contact" className="py-16 sm:py-24 md:py-32 lg:py-40 bg-[#F5F2EC] border-t border-[#292722]/10 relative">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12">
         {/* Folio Header with Expanding Hairline */}
-        <div className="relative pb-5 sm:pb-6 mb-10 md:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]"
-          >
+        <StaggerItem step={0} className="relative pb-5 sm:pb-6 mb-10 md:mb-16">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] uppercase tracking-[0.24em] sm:tracking-[0.26em] text-[#777765]">
             <span>04 — Your Space, Reimagined</span>
             <span className="hidden sm:inline">Commission Intake & Architectural Dossier</span>
-          </motion.div>
+          </div>
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
@@ -146,10 +141,10 @@ export const ContactSection: React.FC = () => {
             style={{ originX: 0 }}
             className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#292722]/15"
           />
-        </div>
+        </StaggerItem>
 
         {/* Section Heading & Studio Capacity Indicator */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-12 sm:mb-16 md:mb-20">
+        <StaggerItem step={1} className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-12 sm:mb-16 md:mb-20">
           <div>
             <StaggeredHeading
               as="h2"
@@ -183,12 +178,12 @@ export const ContactSection: React.FC = () => {
               Currently <strong className="font-medium text-[#292722]">2 of 4</strong> residential envelopes allocated.
             </p>
           </div>
-        </div>
+        </StaggerItem>
 
         {/* Contact Layout: Interactive Form + Studio Details */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-start">
           {/* Interactive Form Column */}
-          <div className="lg:col-span-7 bg-[#F5F2EC] p-4 sm:p-8 md:p-10 border border-[#292722]/15 shadow-[0_8px_32px_rgba(41,39,34,0.03)]">
+          <StaggerItem step={2} className="lg:col-span-7 bg-[#F5F2EC] p-4 sm:p-8 md:p-10 border border-[#292722]/15 shadow-[0_8px_32px_rgba(41,39,34,0.03)]">
             <AnimatePresence mode="wait">
               {submittedBrief ? (
                 <motion.div
@@ -496,10 +491,10 @@ export const ContactSection: React.FC = () => {
                 </form>
               )}
             </AnimatePresence>
-          </div>
+          </StaggerItem>
 
           {/* Studio Details Column with Monograph Aesthetic */}
-          <div className="lg:col-span-5 space-y-10 lg:pl-4">
+          <StaggerItem step={3} className="lg:col-span-5 space-y-10 lg:pl-4">
             <div>
               <span className="text-xs uppercase tracking-[0.26em] font-medium text-[#777765] block mb-3 font-mono">
                 Studio Headquarters · Practice Datum
@@ -576,9 +571,9 @@ export const ContactSection: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </StaggerItem>
         </div>
       </div>
-    </section>
+    </StaggerSection>
   );
 };
